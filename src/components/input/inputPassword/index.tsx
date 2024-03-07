@@ -23,7 +23,6 @@ type Props = {
   value?: string;
   testID?: string;
   isValid?: boolean;
-
   borderColor?: string;
   iconColor?: string;
 };
@@ -36,7 +35,6 @@ const InputPassword: React.FC<Props> = ({
   testID,
   isValid,
   value,
-
   borderColor,
   iconColor,
 }) => {

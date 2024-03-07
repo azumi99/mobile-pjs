@@ -28,7 +28,7 @@ const LoginScreen = () => {
     setIsValidPassword(!isValidPassword);
     isValidEmail &&
       isValidPassword &&
-      navigation.navigate('TabNav', {screen: 'HomeScreen'});
+      navigation.navigate('TabNav', {screen: 'Home'});
   };
 
   const handleState = () => {
