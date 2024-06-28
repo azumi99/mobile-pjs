@@ -25,6 +25,7 @@ type Props = {
   isValid?: boolean;
   borderColor?: string;
   iconColor?: string;
+  messageError?: string;
 };
 const InputPassword: React.FC<Props> = ({
   label,
@@ -37,6 +38,7 @@ const InputPassword: React.FC<Props> = ({
   value,
   borderColor,
   iconColor,
+  messageError = '',
 }) => {
   return (
     <FormControl isInvalid={isValid}>
@@ -63,7 +65,11 @@ const InputPassword: React.FC<Props> = ({
       </Input>
       <FormControlError>
         <FormControlErrorIcon as={AlertCircleIcon} />
-        <FormControlErrorText>Minimum password 6 charcter</FormControlErrorText>
+        <FormControlErrorText>
+          {messageError?.length < 6
+            ? 'Minimum password 6 charcter'
+            : messageError}
+        </FormControlErrorText>
       </FormControlError>
     </FormControl>
   );

@@ -8,9 +8,12 @@ import {Center, Text, VStack, View} from '@gluestack-ui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {ChatScreen} from '@screens/Chat';
+import {DarkModeStore, MessageStore, UserStore} from '@config/store';
 
 const TabNav = () => {
   const Tab = createBottomTabNavigator();
+  const {user} = UserStore();
+  const {mode} = DarkModeStore();
   const size = 20;
   const iconHome = (color: string, focused: boolean) => (
     <VStack space="xs" style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -24,7 +27,7 @@ const TabNav = () => {
           textAlign: 'center',
           fontFamily: 'Poppins-Regular',
           fontSize: 10,
-          color: focused ? '#387fdc' : 'black',
+          color: focused ? '#387fdc' : mode ? 'white' : 'black',
         }}>
         Home
       </Text>
@@ -43,7 +46,7 @@ const TabNav = () => {
           textAlign: 'center',
           fontFamily: 'Poppins-Regular',
           fontSize: 10,
-          color: focused ? '#387fdc' : 'black',
+          color: focused ? '#387fdc' : mode ? 'white' : 'black',
         }}>
         Request
       </Text>
@@ -62,7 +65,7 @@ const TabNav = () => {
           textAlign: 'center',
           fontFamily: 'Poppins-Regular',
           fontSize: 10,
-          color: focused ? '#387fdc' : 'black',
+          color: focused ? '#387fdc' : mode ? 'white' : 'black',
         }}>
         History
       </Text>
@@ -81,7 +84,7 @@ const TabNav = () => {
           textAlign: 'center',
           fontFamily: 'Poppins-Regular',
           fontSize: 10,
-          color: focused ? '#387fdc' : 'black',
+          color: focused ? '#387fdc' : mode ? 'white' : 'black',
         }}>
         Chat
       </Text>
@@ -100,7 +103,7 @@ const TabNav = () => {
           textAlign: 'center',
           fontFamily: 'Poppins-Regular',
           fontSize: 10,
-          color: focused ? '#387fdc' : 'black',
+          color: focused ? '#387fdc' : mode ? 'white' : 'black',
         }}>
         Profile
       </Text>
@@ -111,10 +114,17 @@ const TabNav = () => {
       screenOptions={{
         headerShown: false,
         tabBarLabel: () => null,
+        headerStyle: {
+          backgroundColor: mode ? 'black' : 'white',
+        },
+        headerTitleStyle: {
+          color: mode ? 'white' : 'black',
+        },
         tabBarStyle: {
           height: 75,
           alignItems: 'center',
           justifyContent: 'center',
+          backgroundColor: mode ? 'black' : 'white',
         },
       }}>
       <Tab.Screen
@@ -129,6 +139,7 @@ const TabNav = () => {
         component={RequestScreen}
         options={{
           tabBarIcon: ({color, focused}) => iconRequest(color, focused),
+
           tabBarShowLabel: true,
           headerShown: true,
           headerTitle: 'Request',
@@ -146,6 +157,7 @@ const TabNav = () => {
           headerTitleAlign: 'center',
         }}
       />
+
       <Tab.Screen
         name="History"
         component={HistoryScreen}
@@ -157,6 +169,7 @@ const TabNav = () => {
           headerTitleAlign: 'center',
         }}
       />
+
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}

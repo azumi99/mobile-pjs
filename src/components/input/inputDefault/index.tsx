@@ -36,6 +36,9 @@ type Props = {
   messageFail?: string;
   isValid?: boolean;
   borderColor?: string;
+  messageError?: string;
+  defaultValue?: string;
+  width?: DimensionValue;
 };
 const InputDefault: React.FC<Props> = ({
   label,
@@ -55,13 +58,19 @@ const InputDefault: React.FC<Props> = ({
   testID,
   messageFail,
   isValid,
-  borderColor,
+  borderColor = '#d6d3d1',
+  messageError,
+  defaultValue,
+  width,
 }) => {
   return (
-    <FormControl isInvalid={isValid}>
-      <FormControlLabel mb="$1">
-        <FormControlLabelText>{label}</FormControlLabelText>
-      </FormControlLabel>
+    <FormControl isInvalid={isValid} width={width}>
+      {label && (
+        <FormControlLabel mb="$1">
+          <FormControlLabelText>{label}</FormControlLabelText>
+        </FormControlLabel>
+      )}
+
       <Input
         variant={variant}
         size={size}
@@ -75,6 +84,7 @@ const InputDefault: React.FC<Props> = ({
         )}
 
         <InputField
+          defaultValue={defaultValue}
           placeholder={placeHolder}
           onChangeText={value => changeText(value)}
           value={value}
@@ -87,7 +97,9 @@ const InputDefault: React.FC<Props> = ({
       </Input>
       <FormControlError>
         <FormControlErrorIcon as={AlertCircleIcon} />
-        <FormControlErrorText>Invalid email input</FormControlErrorText>
+        <FormControlErrorText>
+          {messageError === '' ? 'Invalid email input' : messageError}
+        </FormControlErrorText>
       </FormControlError>
     </FormControl>
   );

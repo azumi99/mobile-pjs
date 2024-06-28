@@ -21,11 +21,13 @@ import {DimensionValue} from 'react-native';
 type Props = {
   label?: string;
   valueChange: (value: string) => void;
-  placeHolder: string;
+  placeHolder?: string;
   variant?: 'rounded' | 'outline' | 'underlined' | undefined;
   size?: 'sm' | 'md' | 'lg' | 'xl' | undefined;
   data: dataInterface[];
   width?: DimensionValue | undefined;
+  selectDefault?: string;
+  isDisabled?: boolean;
 };
 const SelectComponent: React.FC<Props> = ({
   label,
@@ -35,6 +37,8 @@ const SelectComponent: React.FC<Props> = ({
   size,
   width,
   data,
+  selectDefault,
+  isDisabled,
 }) => {
   return (
     <FormControl width={width}>
@@ -44,7 +48,10 @@ const SelectComponent: React.FC<Props> = ({
         </FormControlLabel>
       )}
 
-      <Select onValueChange={(value: string) => valueChange(value)}>
+      <Select
+        onValueChange={(value: string) => valueChange(value)}
+        selectedValue={selectDefault}
+        isDisabled={isDisabled}>
         <SelectTrigger
           variant={variant}
           size={size}

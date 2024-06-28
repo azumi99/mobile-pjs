@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "560509877692",
+    "project_id": "request-app-pjs",
+    "storage_bucket": "request-app-pjs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560509877692:android:3d29de87a62ffbc102bfb9",
+        "android_client_info": {
+          "package_name": "com.request"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgjvRWKKpTHnIJHdgK-CSLP9C_Z1LfsCI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
