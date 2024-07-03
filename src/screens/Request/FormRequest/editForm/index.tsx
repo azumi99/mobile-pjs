@@ -99,6 +99,7 @@ const EditFormRequest = () => {
   const [check, setCheck] = useState<any>();
   const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
   const handleClose = () => setShowActionsheet(!showActionsheet);
+  const [saveLoad, setSaveLoad] = useState(false);
 
   const errorFunc = (message: string) => {
     console.log(message);
@@ -145,6 +146,7 @@ const EditFormRequest = () => {
     }
   };
   const updateRequestFunc = async () => {
+    setSaveLoad(true);
     const params: RequestInterface = {
       title_job: title,
       status: status,
@@ -158,14 +160,37 @@ const EditFormRequest = () => {
       const response = await updateRequest(errorFunc, idNav, params);
       console.log('param', response);
       if (response?.status) {
+        setSaveLoad(false);
         navigation.navigate('StackNav', {screen: 'DetailsRequest'});
         Snackbar.show({
           text: response.message,
           backgroundColor: '#348352',
           duration: 1500,
         });
+      } else {
+        const errorMessages = [
+          response.do_date?.[0],
+          response.notes?.[0],
+          response.title_job?.[0],
+        ].filter(Boolean);
+
+        if (errorMessages.length > 0) {
+          const combinedMessage = errorMessages.join('\n');
+          Snackbar.show({
+            text: combinedMessage,
+            backgroundColor: '#f43f5e',
+            duration: 1500,
+          });
+        }
+        setSaveLoad(false);
       }
     } catch (error) {
+      setSaveLoad(false);
+      Snackbar.show({
+        text: 'Error conection',
+        backgroundColor: '#f43f5e',
+        duration: 1500,
+      });
       console.log('getRequestFunc error conection', error);
     }
   };
@@ -498,9 +523,15 @@ const EditFormRequest = () => {
                   padding: 10,
                   borderRadius: 10,
                 }}>
-                <Text color="white" textAlign="center">
-                  Save Request
-                </Text>
+                {saveLoad ? (
+                  <Text color="white" textAlign="center">
+                    Updating data <Spinner size="small" />
+                  </Text>
+                ) : (
+                  <Text color="white" textAlign="center">
+                    Save Request
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

@@ -95,7 +95,8 @@ const NotificationScreen = () => {
                     justifyContent="space-between">
                     <VStack space="sm">
                       <Text color="white" bold size="xs">
-                        {value?.title}
+                        {value.title.split(' ').slice(0, 4).join(' ')}
+                        {'...'}
                       </Text>
                       <Text color="white" size="xs">
                         {value.body.split(' ').slice(0, 4).join(' ')}

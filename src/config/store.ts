@@ -129,7 +129,7 @@ const TokenFCMStore = create<FcmInterface>()(set => ({
   setFcmtoken: (value: string) => set({fcmtoken: value}),
 }));
 const MessageStore = create<any>()(set => ({
-  messageData: [],
+  messageData: '',
   setMessageData: (value: any) => set({messageData: value}),
 }));
 interface NotifInterface {

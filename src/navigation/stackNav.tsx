@@ -23,6 +23,7 @@ import {AddFormRequest} from '@screens/Request/FormRequest/addForm';
 import {ChangePasswordScreen} from '@screens/Profile/ChangePassword';
 import {ManageUser} from '@screens/Profile/ManageUser';
 import {NotificationScreen} from '@screens/Notifikasi';
+import {ContactScreen} from '@screens/Chat/Contact';
 const Stack = createNativeStackNavigator();
 export const StackNavigation = ({route}) => {
   const navigation = useNavigation<any>();
@@ -75,7 +76,7 @@ export const StackNavigation = ({route}) => {
         name="DetailChat"
         component={DetailChat}
         options={{
-          title: dataRoute.params?.param?.name,
+          title: dataRoute.params?.params?.name,
           headerBackVisible: false,
           headerShown: true,
           headerTitleAlign: 'center',
@@ -204,6 +205,21 @@ export const StackNavigation = ({route}) => {
                 setNotif('');
                 navigation.goBack();
               }}>
+              <IconCustom As={Ionicons} name="chevron-back" size={20} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="ContactScreen"
+        component={ContactScreen}
+        options={{
+          title: 'Contact',
+          headerBackVisible: false,
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <IconCustom As={Ionicons} name="chevron-back" size={20} />
             </TouchableOpacity>
           ),

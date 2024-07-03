@@ -50,20 +50,20 @@ const NavigatorScreen = () => {
           message: strBody,
         });
         if (notification.data.param !== '0') {
-          const initialMessages = [
-            {
-              _id: notification.data.id_chat,
-              createdAt: new Date(),
-              text: notification.data.message,
-              user: {
-                _id: 2,
-                name: 'React Native',
-                avatar:
-                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-              },
-            },
-          ];
-          setMessageData(initialMessages);
+          // const initialMessages = [
+          //   {
+          //     _id: key,
+          //     createdAt: new Date(),
+          //     text: notification.data.message,
+          //     user: {
+          //       _id: 2,
+          //       name: 'React Native',
+          //       avatar:
+          //         'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+          //     },
+          //   },
+          // ];
+          setMessageData(id);
         }
         if (notification.data.param !== '1') {
           setNotif(id);
