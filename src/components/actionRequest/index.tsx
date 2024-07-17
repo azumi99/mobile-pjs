@@ -83,10 +83,10 @@ const ActionEdit: React.FC<Props> = ({
             </ActionsheetItem>
             <ActionsheetItem
               onPress={() => {
-                updateAction && updateAction('Progress');
+                updateAction && updateAction('Processing');
                 handleClose();
               }}>
-              <ActionsheetItemText>Progress</ActionsheetItemText>
+              <ActionsheetItemText>Processing</ActionsheetItemText>
             </ActionsheetItem>
             <ActionsheetItem
               isDisabled={statusDetail === 'Waiting' ? true : false}

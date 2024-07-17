@@ -28,7 +28,8 @@ const EditProfileScreen = () => {
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [role, setRole] = useState(user?.role);
-  const [url, setUrl] = useState(user?.url);
+  const [url, setUrl] = useState(user?.url as string);
+  const [avatarKey, setAvatarKey] = useState(Date.now());
   const {param, setParam} = EditProfileStore();
   const ChoseImage = async () => {
     try {
@@ -38,6 +39,7 @@ const EditProfileScreen = () => {
       });
       if (!result.didCancel && result.assets && result.assets.length > 0) {
         setUrl(`data:image/png;base64,${result.assets[0].base64}` as string);
+        setAvatarKey(Date.now());
       }
     } catch (error) {
       console.log('error image', error);
@@ -90,6 +92,7 @@ const EditProfileScreen = () => {
   };
   console.log(url);
   useEffect(() => {
+    // setUrl(user?.url as string);
     param && updateProfileFunc();
   }, [param]);
   return (
@@ -102,6 +105,7 @@ const EditProfileScreen = () => {
                 <AvatarFallbackText>{user?.name}</AvatarFallbackText>
                 <AvatarImage
                   alt={user?.name}
+                  key={avatarKey}
                   source={{
                     uri: url?.startsWith('data:image') ? url : baseURL + url,
                   }}

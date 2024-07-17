@@ -1,7 +1,7 @@
 import {TokenJwt} from '@config/store';
 import axios, {AxiosInstance} from 'axios';
 
-const baseURL = 'http://localhost:8000';
+const baseURL = 'https://api-request.drwinventory.xyz';
 const instance: AxiosInstance = axios.create({
   baseURL: `${baseURL}/api`,
 });

@@ -23,14 +23,14 @@ const DetailChat = ({route}) => {
   const getChatDetailFunc = async () => {
     try {
       const response = await chatDetailServices(errorFunc, route?.params?.id);
-      console.log('test mm');
+
       if (response.status) {
         const messageDb = response.data.map(value => ({
           _id: value.id,
           text: value.message,
           createdAt: value.created_at,
           user: {
-            _id: value.id_user === user?.id ? 1 : 0,
+            _id: value.id_user == user?.id ? 1 : 0,
             name: value.name,
             avatar: `${baseURL}${route?.params?.avatar}`,
           },
@@ -41,6 +41,7 @@ const DetailChat = ({route}) => {
       console.log('getChatDetailFunc conection error', error);
     }
   };
+  // console.log('test mm', messages);
   const saveChatDetailFunc = async (message: string) => {
     const param: detailChatInterface = {
       id_chat: route?.params?.id,
@@ -49,11 +50,13 @@ const DetailChat = ({route}) => {
       message: message,
     };
     try {
-      if (messages.length < 2) {
+      console.log(' mmmnnnn', messages.length < 2);
+      if (messages.length < 1) {
         const saveChat = await chatSave(
           errorFunc,
           `[${user?.id}, ${route?.params?.userId}]`,
         );
+
         if (!saveChat.found) {
           const params: detailChatInterface = {
             id_chat: saveChat.data.id,
@@ -73,10 +76,7 @@ const DetailChat = ({route}) => {
   useEffect(() => {
     getChatDetailFunc();
   }, [messageData]);
-  console.log('test message', messageData);
-  // useEffect(() => {
-  //   setMessages([...messageData, ...messages]);
-  // }, [messageData]);
+  // console.log('test message', messageData);
 
   const onSend = useCallback(
     (messages: any = []) => {

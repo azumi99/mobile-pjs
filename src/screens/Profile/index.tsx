@@ -65,7 +65,9 @@ const ProfileScreen = () => {
     });
   };
 
-  console.log(mode);
+  useEffect(() => {
+    user?.url;
+  }, [user?.url]);
 
   return (
     <SafeAreaCustom>

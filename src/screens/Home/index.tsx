@@ -12,6 +12,7 @@ import {
   ChevronDownIcon,
   HStack,
   Icon,
+  RefreshControl,
   Select,
   SelectBackdrop,
   SelectContent,
@@ -60,6 +61,11 @@ import {getHistorytAll, getHistorytAllSuper} from '@services/History/services';
 import {baseURL} from '@config/intance';
 import {checkApplicationPermission} from '@config/firebase';
 import {FcmSave} from '@services/FCM';
+import {
+  historyCountService_1,
+  requestCountService_1,
+  statusCountService_1,
+} from '@services/Dashboard/superadminServices';
 
 const HomeScreen = () => {
   const [prefix, setPrefix] = useState('Month');
@@ -78,6 +84,7 @@ const HomeScreen = () => {
   const [cancel, setCancel] = useState('');
   const [dataRequest, setDataRequest] = useState<RequestInterface[]>([]);
   const [dataHistory, setDataHistory] = useState<RequestInterface[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
   const prefixData: dataInterface[] = [
     {label: 'Month', value: 'Month'},
@@ -107,7 +114,7 @@ const HomeScreen = () => {
       const progressResponse = await statusCountService(
         errorFunc,
         user?.id,
-        'progress',
+        'processing',
       );
       const waitingResponse = await statusCountService(
         errorFunc,
@@ -143,6 +150,30 @@ const HomeScreen = () => {
       console.log('serviceCountStatusFunc error', error);
     }
   };
+  const serviceCountStatusFuncSuperadmin = async () => {
+    try {
+      const progressResponse = await statusCountService_1(
+        errorFunc,
+        'processing',
+      );
+      const waitingResponse = await statusCountService_1(errorFunc, 'waiting');
+      const cancelResponse = await statusCountService_1(errorFunc, 'cancel');
+      const doneResponse = await statusCountService_1(errorFunc, 'done');
+      const requestCountResponse = await requestCountService_1(errorFunc);
+      const historytCountResponse = await historyCountService_1(errorFunc);
+
+      setWaiting(waitingResponse.data);
+      setProgress(progressResponse.data);
+      setDone(doneResponse.data);
+      setCancel(cancelResponse.data);
+      setRequest(requestCountResponse.data);
+      setHistory(historytCountResponse.data);
+    } catch (error) {
+      console.log('serviceCountStatusFunc error', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
   const requestSlide = async () => {
     try {
       const responseall =
@@ -156,6 +187,8 @@ const HomeScreen = () => {
     } catch (error) {
       console.log('requestSlide error', error);
       setLoading(false);
+    } finally {
+      setRefreshing(false);
     }
   };
   const historySlide = async () => {
@@ -169,6 +202,8 @@ const HomeScreen = () => {
       }
     } catch (error) {
       console.log('requestSlide error', error);
+    } finally {
+      setRefreshing(false);
     }
   };
   const FcmTokenSave = async () => {
@@ -179,21 +214,27 @@ const HomeScreen = () => {
       console.log('FcmTokenSave error conection', error);
     }
   };
+  const funcAll = () => {
+    user?.role === 'superadmin'
+      ? serviceCountStatusFuncSuperadmin()
+      : serviceCountStatusFunc();
+    requestSlide();
+    historySlide();
+    FcmTokenSave();
+  };
+  const onRefresh = () => {
+    setRefreshing(true);
+    funcAll();
+  };
 
   useFocusEffect(
     useCallback(() => {
-      serviceCountStatusFunc();
-      FcmTokenSave();
-      requestSlide();
-      historySlide();
+      funcAll();
     }, []),
   );
   useEffect(() => {
-    FcmTokenSave();
-    serviceCountStatusFunc();
-    requestSlide();
-    historySlide();
-  }, [user]);
+    funcAll();
+  }, []);
   return (
     <SafeAreaCustom>
       <View flex={1} paddingHorizontal={16} mt={20}>
@@ -236,7 +277,11 @@ const HomeScreen = () => {
           {loading ? (
             <Spinner size="small" />
           ) : (
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }>
               <VStack space="xl" mb={100} mt={10}>
                 <VStack space="md">
                   <HStack justifyContent="space-between" alignItems="center">
@@ -314,7 +359,7 @@ const HomeScreen = () => {
                         History List
                       </Text>
                       <TextHeading style={{color: 'white'}}>
-                        {dataTotal.total_request_history}
+                        {history}
                       </TextHeading>
                     </Box>
                   </HStack>

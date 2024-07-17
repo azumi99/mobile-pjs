@@ -7,7 +7,9 @@ import {
   HStack,
   Heading,
   Icon,
+  RefreshControl,
   ScrollView,
+  Spinner,
   Text,
   VStack,
   View,
@@ -27,6 +29,8 @@ const ChatScreen = () => {
   const navigation = useNavigation<any>();
   const [data, setData] = useState<ChatInterface[]>([]);
   const {user} = UserStore();
+  const [refreshing, setRefreshing] = useState(false);
+  const [load, setLoad] = useState(true);
   const errorFunc = (message: string) => {
     console.log(message);
   };
@@ -38,6 +42,11 @@ const ChatScreen = () => {
       }
     } catch (error) {
       console.log('chatFunc error', error);
+      setRefreshing(false);
+      setLoad(false);
+    } finally {
+      setRefreshing(false);
+      setLoad(false);
     }
   };
 
@@ -62,7 +71,10 @@ const ChatScreen = () => {
       },
     });
   };
-
+  const onRefresh = () => {
+    setRefreshing(true);
+    chatFunc().then(() => setRefreshing(false));
+  };
   useEffect(() => {
     chatFunc();
   }, []);
@@ -78,57 +90,74 @@ const ChatScreen = () => {
           <TextHeading>Contact</TextHeading>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('StackNav', {screen: 'ContactScreen'})
+              navigation.navigate('StackNav', {
+                screen: 'ContactScreen',
+                data: data,
+              })
             }>
             <TextHeading style={{color: '#0077E6'}}>Add Chat</TextHeading>
           </TouchableOpacity>
         </HStack>
-        <ScrollView>
-          <VStack space="md">
-            {data.map((value, key) => (
-              <React.Fragment key={key}>
-                {value.users.map((item, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onLongPress={() => deleteActionFunc(value.id)}
-                    onPress={() =>
-                      navigation.navigate('StackNav', {
-                        screen: 'DetailChat',
-                        params: {
-                          name: item.name,
-                          id: value.id,
-                          avatar: item.url,
-                        },
-                      })
-                    }>
-                    <Box bg="$primary500" p="$5" borderRadius={10}>
-                      <HStack space="md">
-                        <Avatar>
-                          <AvatarFallbackText>{item.name}</AvatarFallbackText>
-                          {(item.url?.length as number) > 0 && (
-                            <AvatarImage
-                              alt={item?.name}
-                              source={{
-                                uri: `${baseURL}${item.url}`,
-                              }}
-                            />
-                          )}
-                        </Avatar>
-                        <VStack>
-                          <Heading size="sm" color="white">
-                            {item.name}
-                          </Heading>
-                          <Text size="sm" color="white">
-                            {item.role}
-                          </Text>
-                        </VStack>
-                      </HStack>
-                    </Box>
-                  </TouchableOpacity>
-                ))}
-              </React.Fragment>
-            ))}
-          </VStack>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          {data?.length > 0 ? (
+            <VStack space="md">
+              {data.map((value, key) => (
+                <React.Fragment key={key}>
+                  {value.users.map((item, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onLongPress={() => deleteActionFunc(value.id)}
+                      onPress={() =>
+                        navigation.navigate('StackNav', {
+                          screen: 'DetailChat',
+                          params: {
+                            name: item.name,
+                            id: value.id,
+                            avatar: item.url,
+                          },
+                        })
+                      }>
+                      <Box bg="$primary500" p="$5" borderRadius={10}>
+                        <HStack space="md">
+                          <Avatar>
+                            <AvatarFallbackText>{item.name}</AvatarFallbackText>
+                            {(item.url?.length as number) > 0 && (
+                              <AvatarImage
+                                alt={item?.name}
+                                source={{
+                                  uri: `${baseURL}${item.url}`,
+                                }}
+                              />
+                            )}
+                          </Avatar>
+                          <VStack>
+                            <Heading size="sm" color="white">
+                              {item.name}
+                            </Heading>
+                            <Text size="sm" color="white">
+                              {item.role}
+                            </Text>
+                          </VStack>
+                        </HStack>
+                      </Box>
+                    </TouchableOpacity>
+                  ))}
+                </React.Fragment>
+              ))}
+            </VStack>
+          ) : (
+            <View alignSelf="center">
+              {load ? (
+                <Spinner size="small" />
+              ) : (
+                <Text size="xs">No Chat Data</Text>
+              )}
+            </View>
+          )}
         </ScrollView>
       </VStack>
     </SafeAreaCustom>

@@ -9,6 +9,7 @@ import {
   HStack,
   KeyboardAvoidingView,
   ScrollView,
+  Spinner,
   Text,
   VStack,
   View,
@@ -42,6 +43,7 @@ const LoginScreen = () => {
 
     setIsValid(!isValidEmail);
     setIsValidPassword(!isValidPassword);
+    !isValidEmail && !isValidPassword && setLoading(false);
     isValidEmail && isValidPassword && serviceLogin();
   };
 
@@ -54,7 +56,6 @@ const LoginScreen = () => {
     setLoading(true);
     // setTimeout(() => {
     validateEmail();
-    setLoading(false);
     // }, 100);
   };
   const errorFunc = (message: string) => {
@@ -80,16 +81,19 @@ const LoginScreen = () => {
       if (result?.access_token) {
         setToken(result?.access_token);
         userServiceFunc();
+        setLoading(false);
         navigation.navigate('TabNav', {screen: 'Home'});
       } else if (result?.error) {
         setMessageError(result?.error);
         setIsValid(true);
         setIsValidPassword(true);
+        setLoading(false);
       }
     } catch (error) {
       setMessageError('error conection login');
       setIsValid(true);
       setIsValidPassword(true);
+      setLoading(false);
       console.log('serviceLogin error conection', error);
     }
   };
@@ -152,7 +156,14 @@ const LoginScreen = () => {
                   fetchData();
                   console.log('buttonLogin 115');
                 }}>
-                <ButtonText>Login</ButtonText>
+                {loading ? (
+                  <HStack>
+                    <Text color="white">Login </Text>
+                    <Spinner size="small" color={'white'} />
+                  </HStack>
+                ) : (
+                  <ButtonText>Login</ButtonText>
+                )}
               </Button>
             </VStack>
           </View>
